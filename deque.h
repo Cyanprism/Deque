@@ -1,4 +1,4 @@
-//
+//https://github.com/Cyanprism/Deque
 
 #include <cstdio>
 #include <iostream>
@@ -15,6 +15,7 @@ private:
 public:
     Deque ();
     Deque (const Deque <TElem> &Obj);
+    ~Deque ();
 
     void push_back (TElem elem);
     void push_front (TElem elem);
@@ -171,6 +172,11 @@ Deque <TElem>::Deque  (const Deque <TElem> &obj) {
 
     _array = new TElem[_array_size];
     std::copy(obj._array, obj._array + _array_size, _array);
+}
+
+template <class TElem>
+Deque<TElem>::~Deque () {
+    delete[] _array;
 }
 
 template <class TElem>
