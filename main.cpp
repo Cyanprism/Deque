@@ -229,6 +229,22 @@ TEST(Iterators, Test4) {
     EXPECT_EQ(1, *it);
 }
 
+template <class TIter1, class TIter2>
+bool iterators_check (TIter1 begin1, TIter1 end1, TIter2 begin2, TIter2 end2) {
+    auto it1 = begin1;
+    auto it2 = begin2;
+    for (; it1 != end1 && it2 != end2; ++it1, ++it2) {
+        if (*it1 != *it2) {
+            return false;
+        }
+    }
+    if ((it1 == end1) + (it2 == end2) == 1) {
+        return false;
+    }
+
+    return true;
+}
+
 bool full_check (const Deque<int> &deque1, const std::deque<int> &deque2) {
     if (deque1.size() != deque2.size() || deque1.empty() != deque2.empty() ||
         deque1.front() != deque2.front() || deque1.back() != deque2.back())
@@ -242,56 +258,17 @@ bool full_check (const Deque<int> &deque1, const std::deque<int> &deque2) {
         }
     }
 
-    {
-        auto it1 = deque1.begin();
-        auto it2 = deque2.begin();
-        for (; it1 != deque1.end() && it2 != deque2.end(); ++it1, ++it2) {
-            if (*it1 != *it2) {
-                return false;
-            }
-        }
-        if ((it1 == deque1.end()) + (it2 == deque2.end()) == 1) {
-            return false;
-        }
+    if (!iterators_check(deque1.begin(), deque1.end(), deque2.begin(), deque2.end())) {
+        return false;
     }
-
-    {
-        auto it1 = deque1.cbegin();
-        auto it2 = deque2.cbegin();
-        for (; it1 != deque1.cend() && it2 != deque2.cend(); ++it1, ++it2) {
-            if (*it1 != *it2) {
-                return false;
-            }
-        }
-        if ((it1 == deque1.cend()) + (it2 == deque2.cend()) == 1) {
-            return false;
-        }
+    if (!iterators_check(deque1.cbegin(), deque1.cend(), deque2.cbegin(), deque2.cend())) {
+        return false;
     }
-
-    {
-        auto it1 = deque1.rbegin();
-        auto it2 = deque2.rbegin();
-        for (; it1 != deque1.rend() && it2 != deque2.rend(); ++it1, ++it2) {
-            if (*it1 != *it2) {
-                return false;
-            }
-        }
-        if ((it1 == deque1.rend()) + (it2 == deque2.rend()) == 1) {
-            return false;
-        }
+    if (!iterators_check(deque1.rbegin(), deque1.rend(), deque2.rbegin(), deque2.rend())) {
+        return false;
     }
-
-    {
-        auto it1 = deque1.crbegin();
-        auto it2 = deque2.crbegin();
-        for (; it1 != deque1.crend() && it2 != deque2.crend(); ++it1, ++it2) {
-            if (*it1 != *it2) {
-                return false;
-            }
-        }
-        if ((it1 == deque1.crend()) + (it2 == deque2.crend()) == 1) {
-            return false;
-        }
+    if (!iterators_check(deque1.crbegin(), deque1.crend(), deque2.crbegin(), deque2.crend())) {
+        return false;
     }
 
     return true;
