@@ -229,3 +229,39 @@ TEST(Iterators, Test4) {
     EXPECT_EQ(1, *it);
 }
 
+TEST(DequeVsDeque, Test2) {
+    enum Type { push_back, pop_back, push_front, pop_front, brackets };
+
+    Deque<int> deque1;
+    std::deque<int> deque2;
+
+    for (int i = 0; i < 1000; ++i) {
+        Type action = Type(rand() % 5);
+
+        for (int j = 0; j <= 100 * i; ++j) {
+            int key = rand();
+
+            if (rand() % 2) {
+                deque1.push_back(key);
+                deque2.push_back(key);
+            } else {
+                deque1.push_front(key);
+                deque2.push_front(key);
+            }
+        }
+
+        for (int j = 0; j < 100 * i; ++j) {
+            if (rand() % 2) {
+                EXPECT_EQ(deque1.back(), deque2.back());
+
+                deque1.pop_back();
+                deque2.pop_back();
+            } else {
+                EXPECT_EQ(deque1.front(), deque2.front());
+
+                deque1.pop_front();
+                deque2.pop_front();
+            }
+        }
+    }
+}
