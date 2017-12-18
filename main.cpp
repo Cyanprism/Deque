@@ -229,13 +229,67 @@ TEST(Iterators, Test4) {
     EXPECT_EQ(1, *it);
 }
 
-bool full_check (Deque<int> deque1, std::deque<int> deque2) {
-    if (deque1.size() != deque2.size()) {
+bool full_check (const Deque<int> &deque1, const std::deque<int> &deque2) {
+    if (deque1.size() != deque2.size() || deque1.empty() != deque2.empty() ||
+        deque1.front() != deque2.front() || deque1.back() != deque2.back())
+    {
         return false;
     }
 
     for (int i = 0; i < deque1.size(); ++i) {
         if (deque1[i] != deque2[i]) {
+            return false;
+        }
+    }
+
+    {
+        auto it1 = deque1.begin();
+        auto it2 = deque2.begin();
+        for (; it1 != deque1.end() && it2 != deque2.end(); ++it1, ++it2) {
+            if (*it1 != *it2) {
+                return false;
+            }
+        }
+        if ((it1 == deque1.end()) + (it2 == deque2.end()) == 1) {
+            return false;
+        }
+    }
+
+    {
+        auto it1 = deque1.cbegin();
+        auto it2 = deque2.cbegin();
+        for (; it1 != deque1.cend() && it2 != deque2.cend(); ++it1, ++it2) {
+            if (*it1 != *it2) {
+                return false;
+            }
+        }
+        if ((it1 == deque1.cend()) + (it2 == deque2.cend()) == 1) {
+            return false;
+        }
+    }
+
+    {
+        auto it1 = deque1.rbegin();
+        auto it2 = deque2.rbegin();
+        for (; it1 != deque1.rend() && it2 != deque2.rend(); ++it1, ++it2) {
+            if (*it1 != *it2) {
+                return false;
+            }
+        }
+        if ((it1 == deque1.rend()) + (it2 == deque2.rend()) == 1) {
+            return false;
+        }
+    }
+
+    {
+        auto it1 = deque1.crbegin();
+        auto it2 = deque2.crbegin();
+        for (; it1 != deque1.crend() && it2 != deque2.crend(); ++it1, ++it2) {
+            if (*it1 != *it2) {
+                return false;
+            }
+        }
+        if ((it1 == deque1.crend()) + (it2 == deque2.crend()) == 1) {
             return false;
         }
     }
@@ -249,10 +303,10 @@ TEST(DequeVsDeque, Test2) {
     Deque<int> deque1;
     std::deque<int> deque2;
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 50; ++i) {
         Type action = Type(rand() % 5);
 
-        for (int j = 0; j <= 100 * i; ++j) {
+        for (int j = 0; j <= 10 * i; ++j) {
             int key = rand();
 
             if (rand() % 2) {
@@ -264,7 +318,7 @@ TEST(DequeVsDeque, Test2) {
             }
         }
 
-        for (int j = 0; j < 100 * i; ++j) {
+        for (int j = 0; j < 10 * i; ++j) {
             if (rand() % 2) {
                 deque1.pop_back();
                 deque2.pop_back();
