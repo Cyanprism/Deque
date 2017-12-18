@@ -229,6 +229,20 @@ TEST(Iterators, Test4) {
     EXPECT_EQ(1, *it);
 }
 
+bool full_check (Deque<int> deque1, std::deque<int> deque2) {
+    if (deque1.size() != deque2.size()) {
+        return false;
+    }
+
+    for (int i = 0; i < deque1.size(); ++i) {
+        if (deque1[i] != deque2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 TEST(DequeVsDeque, Test2) {
     enum Type { push_back, pop_back, push_front, pop_front, brackets };
 
@@ -252,16 +266,14 @@ TEST(DequeVsDeque, Test2) {
 
         for (int j = 0; j < 100 * i; ++j) {
             if (rand() % 2) {
-                EXPECT_EQ(deque1.back(), deque2.back());
-
                 deque1.pop_back();
                 deque2.pop_back();
             } else {
-                EXPECT_EQ(deque1.front(), deque2.front());
-
                 deque1.pop_front();
                 deque2.pop_front();
             }
+
+            EXPECT_TRUE(full_check(deque1, deque2));
         }
     }
 }
